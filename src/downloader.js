@@ -1,5 +1,16 @@
 export const CONCURRENCY = 2;
 export const MAX_FILE_BYTES = 100 * 1024 * 1024;
+export function selectFiles(files, fileIds) {
+  if (fileIds === undefined) return files.filter(file => !file.unavailable);
+  if (!Array.isArray(fileIds) || fileIds.length > files.length || fileIds.some(id => typeof id !== 'string')) {
+    throw new Error('Invalid file selection. Scan this course again.');
+  }
+  const selected = new Set(fileIds);
+  if (fileIds.some(id => !files.some(file => file.id === id))) {
+    throw new Error('The selected files are not in this course scan. Scan again.');
+  }
+  return files.filter(file => selected.has(file.id) && !file.unavailable);
+}
 export function sanitizeFilename(value, fallback = 'Untitled') {
   let name = String(value ?? '').normalize('NFC').replace(/[<>:"/\\|?*\u0000-\u001f\u007f\u202a-\u202e\u2066-\u2069]/g, '_')
     .replace(/^[. ]+|[. ]+$/g, '');

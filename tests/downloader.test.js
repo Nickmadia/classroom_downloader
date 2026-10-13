@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {sanitizeFilename, identifyFile, runQueue, retry, delay} from '../src/downloader.js';
+import {sanitizeFilename, identifyFile, selectFiles, runQueue, retry, delay} from '../src/downloader.js';
+
+test('selection allows only scanned available files and deduplicates selected IDs', () => {
+  const files = [{id:'a'}, {id:'b'}, {id:'restricted',unavailable:'Not permitted'}];
+  assert.deepEqual(selectFiles(files),files.slice(0,2));
+  assert.deepEqual(selectFiles(files,['b','b','restricted']),[files[1]]);
+  assert.deepEqual(selectFiles(files,[]),[]);
+  assert.throws(() => selectFiles(files,['unscanned']),/not in this course scan/);
+  assert.throws(() => selectFiles(files,'b'),/Invalid file selection/);
+  assert.throws(() => selectFiles(files,[{}]),/Invalid file selection/);
+});
 
 test('safe filenames handle traversal, reserved names, Unicode and empty input', () => {
   assert.equal(sanitizeFilename('../../bad\\name:*?'), '_.._bad_name___');

@@ -5,3 +5,4 @@ node_modules/
 coverage/
 .env
 client_secret*.json
+src/config.local.json
