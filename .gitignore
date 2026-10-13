@@ -1,0 +1,7 @@
+node_modules/
+*.xpi
+*.zip
+.DS_Store
+coverage/
+.env
+client_secret*.json

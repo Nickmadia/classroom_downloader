@@ -1,0 +1,51 @@
+{
+  "manifest_version": 2,
+  "name": "Classroom Downloader",
+  "version": "1.0.0",
+  "description": "Download accessible course attachments through the official Google APIs.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "classroom-downloader@opensource.local",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "authenticationInfo",
+          "websiteContent"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "downloads",
+    "identity",
+    "https://classroom.google.com/*",
+    "https://classroom.googleapis.com/*",
+    "https://www.googleapis.com/*",
+    "https://oauth2.googleapis.com/*"
+  ],
+  "background": {
+    "page": "src/background.html",
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://classroom.google.com/*"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    "src/classroom.js",
+    "src/ui.js",
+    "src/styles.css"
+  ],
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "content_security_policy": "script-src 'self'; object-src 'none'"
+}
